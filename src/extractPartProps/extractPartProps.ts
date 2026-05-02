@@ -18,7 +18,9 @@ export default function extractPartProps<T extends PartsDefinition>(
   // 今回対象になるエントリーを取得する
   const dotPrefix = `${part as string}.`;
   const targetKeys = [
-    ...Object.entries(partsProps).filter(([key]) => key.startsWith(dotPrefix)),
+    ...Object.entries(partsProps)
+      .filter(([key]) => key.startsWith(dotPrefix))
+      .map(([key, value]) => [key, { ...(value as Record<string, unknown>) }]), // ← コピーを追加
     [part, { ...partsProps[part as string] }],
   ];
 
@@ -42,18 +44,6 @@ export default function extractPartProps<T extends PartsDefinition>(
 
   return dotBase[part as string] as Partial<T[typeof part]>;
 }
-
-const getIn = (
-  obj: Record<string, unknown>,
-  path: string[],
-): Record<string, unknown> | undefined => {
-  return path.reduce<unknown>((current, key) => {
-    if (current !== null && typeof current === 'object') {
-      return (current as Record<string, unknown>)[key];
-    }
-    return undefined;
-  }, obj) as Record<string, unknown> | undefined;
-};
 
 const setIn = (
   obj: Record<string, unknown>,

@@ -88,6 +88,14 @@ describe('extractPartProps', () => {
       expect(result).toEqual({ title: 'ホーム' });
       expect(result).not.toHaveProperty('label');
     });
+
+    it('直接渡しの値が undefined のとき空オブジェクトを返す', () => {
+      const partsProps: PartsProps<NwrButtonPartsDefinition> = {
+        icon: undefined,
+      };
+      const result = extractPartProps('icon', partsProps);
+      expect(result).toEqual({});
+    });
   });
 
   // ----------------------------------------------------------------
@@ -180,6 +188,20 @@ describe('extractPartProps', () => {
       expect(result.partsProps?.img?.className).toBe('icon-img');
       expect(result).not.toHaveProperty('label');
     });
+
+    it('icon と iconExtra のように前方一致するキーが混在しても干渉しない', () => {
+      type MixedPartsDefinition = {
+        icon: NwrIconProps;
+        iconExtra: NwrIconProps;
+      };
+      const partsProps: PartsProps<MixedPartsDefinition> = {
+        'icon.img': { className: 'icon-img' },
+        'iconExtra.root': { className: 'extra-root' },
+      };
+      const result = extractPartProps('icon', partsProps) as NwrIconProps;
+      expect(result.partsProps?.img?.className).toBe('icon-img');
+      expect(result).not.toHaveProperty('iconExtra');
+    });
   });
 
   // ----------------------------------------------------------------
@@ -196,6 +218,85 @@ describe('extractPartProps', () => {
       // result を変更しても original に影響しないこと
       result.className = 'modified';
       expect(original.className).toBe('original');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // 直接渡しの partsProps との統合（deepMerge の動作確認）
+  // ----------------------------------------------------------------
+  describe('直接渡しの partsProps との統合', () => {
+    it('ドット記法と直接渡しの partsProps に同じキーがあるとき直接渡しのプロパティが優先される', () => {
+      const partsProps: PartsProps<NwrButtonPartsDefinition> = {
+        icon: {
+          partsProps: {
+            img: { className: 'direct-img', alt: 'direct-alt' },
+          },
+        },
+        'icon.img': { className: 'dot-img', alt: 'dot-alt' },
+      };
+      const result = extractPartProps('icon', partsProps) as NwrIconProps;
+      // 直接渡しが優先される
+      expect(result.partsProps?.img?.className).toBe('direct-img');
+      expect(result.partsProps?.img?.alt).toBe('direct-alt');
+    });
+
+    it('ドット記法と直接渡しの partsProps に異なるキーがあるとき両方のプロパティが結果に含まれる', () => {
+      const partsProps: PartsProps<NwrButtonPartsDefinition> = {
+        icon: {
+          partsProps: {
+            img: { alt: 'direct-alt' },
+          },
+        },
+        'icon.img': { className: 'dot-img' },
+      };
+      const result = extractPartProps('icon', partsProps) as NwrIconProps;
+      expect(result.partsProps?.img?.className).toBe('dot-img');
+      expect(result.partsProps?.img?.alt).toBe('direct-alt');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // 元の partsProps の不変性
+  // ----------------------------------------------------------------
+  describe('元の partsProps の不変性', () => {
+    it('結果を変更しても元の partsProps の直接渡しオブジェクトが変更されない', () => {
+      const iconProps = { className: 'original' };
+      const partsProps: PartsProps<NwrButtonPartsDefinition> = {
+        icon: iconProps,
+      };
+      const result = extractPartProps('icon', partsProps) as NwrIconProps;
+      result.className = 'modified';
+      expect(iconProps.className).toBe('original');
+    });
+
+    it('結果を変更しても元の partsProps のドット記法オブジェクトが変更されない', () => {
+      const imgProps = { className: 'original' };
+      const partsProps: PartsProps<NwrButtonPartsDefinition> = {
+        'icon.img': imgProps,
+      };
+      const result = extractPartProps('icon', partsProps) as NwrIconProps;
+      if (result.partsProps?.img) {
+        result.partsProps.img.className = 'modified';
+      }
+      expect(imgProps.className).toBe('original');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // 3階層以上のネスト
+  // ----------------------------------------------------------------
+  describe('3階層以上のネスト', () => {
+    type NwrDeepPartsDefinition = {
+      icon: NwrIconProps; // icon は partsProps を持つ
+    };
+
+    it('2階層のドット記法（icon.img）が正しく展開される', () => {
+      const onLoad = vi.fn();
+      const partsProps: PartsProps<NwrDeepPartsDefinition> = {
+        'icon.img': { onLoad },
+      };
+      const result = extractPartProps('icon', partsProps) as NwrIconProps;
+      expect(result.partsProps?.img?.onLoad).toBe(onLoad);
     });
   });
 });
