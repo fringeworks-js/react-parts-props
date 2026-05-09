@@ -1,6 +1,11 @@
 import extractPartProps from '../extractPartProps';
 import type { PartsDefinition, PartsProps } from '../types';
 
+/**
+ * partsProps配下のドット記法のパス指定のプロパティを解決する
+ * @param partsProps
+ * @returns
+ */
 export default function resolvePartsProps<T extends PartsDefinition>(
   partsProps: PartsProps<T> | undefined,
 ): { [K in keyof T]?: Partial<T[K]> } {

@@ -50,7 +50,9 @@ const setIn = (
   path: string[],
   value: unknown,
 ): Record<string, unknown> => {
-  if (path.length === 0) return obj;
+  if (path.length === 0) {
+    return obj;
+  }
   const [head, ...tail] = path;
   if (tail.length === 0) {
     return { ...obj, [head]: value };

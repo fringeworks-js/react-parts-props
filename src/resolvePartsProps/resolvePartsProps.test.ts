@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import type { PartsProps, WithPartsProps } from '../types';
 import resolvePartsProps from './resolvePartsProps';
 
