@@ -1,3 +1,2 @@
-export { default as extractPartProps } from './extractPartProps';
-export { default as resolvePartsProps } from './resolvePartsProps';
+export { default as mergePartProps } from './mergePartProps';
 export type * from './types';
