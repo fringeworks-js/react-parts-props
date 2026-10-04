@@ -1,6 +1,6 @@
-# @niche-works/react-parts-props
+# @fringeworks/react-parts-props
 
-`@niche-works/react-parts-props` is a niche library for passing props to each of the components that make up a composite React component.
+`@fringeworks/react-parts-props` is a niche library for passing props to each of the components that make up a composite React component.
 
 **[日本語のREADMEはこちら](./README.ja.md)**
 
@@ -16,7 +16,7 @@ This library provides a `partsProps` prop convention for that, and a utility to 
 Declare the parts and their props with `WithPartsProps`.
 
 ```ts
-import type { WithPartsProps } from '@niche-works/react-parts-props';
+import type { WithPartsProps } from '@fringeworks/react-parts-props';
 
 type IconProps = WithPartsProps<{
   root: ComponentProps<'span'>;
@@ -39,7 +39,7 @@ type ButtonProps = WithPartsProps<{
 Merge the props the component gives to each part with `partsProps` using `mergePartProps`.
 
 ```tsx
-import { mergePartProps } from '@niche-works/react-parts-props';
+import { mergePartProps } from '@fringeworks/react-parts-props';
 
 function Button({ icon, children, partsProps }: ButtonProps) {
   return (
@@ -84,8 +84,8 @@ The type of the props is inferred from `base`. Specify it as a type argument whe
 
 ### Types
 
-| Type                | Description                                                                |
-| ------------------- | -------------------------------------------------------------------------- |
+| Type                | Description                                                               |
+| ------------------- | ------------------------------------------------------------------------- |
 | `PartsDefinition`   | Definition of the parts. The key is the part name, the value is its props |
-| `PartsProps<T>`     | Type of `partsProps`                                                       |
-| `WithPartsProps<T>` | Props that have `partsProps`                                               |
+| `PartsProps<T>`     | Type of `partsProps`                                                      |
+| `WithPartsProps<T>` | Props that have `partsProps`                                              |

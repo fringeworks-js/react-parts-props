@@ -1,6 +1,6 @@
-# @niche-works/react-parts-props
+# @fringeworks/react-parts-props
 
-`@niche-works/react-parts-props` は React の複合コンポーネントを構成する各コンポーネントにプロパティを渡すためのニッチなライブラリです。
+`@fringeworks/react-parts-props` は React の複合コンポーネントを構成する各コンポーネントにプロパティを渡すためのニッチなライブラリです。
 
 **[English README is available here](./README.md)**
 
@@ -16,7 +16,7 @@
 `WithPartsProps` でパーツとそのプロパティを定義します。
 
 ```ts
-import type { WithPartsProps } from '@niche-works/react-parts-props';
+import type { WithPartsProps } from '@fringeworks/react-parts-props';
 
 type IconProps = WithPartsProps<{
   root: ComponentProps<'span'>;
@@ -39,7 +39,7 @@ type ButtonProps = WithPartsProps<{
 コンポーネントが各パーツに設定するプロパティと `partsProps` を `mergePartProps` でマージします。
 
 ```tsx
-import { mergePartProps } from '@niche-works/react-parts-props';
+import { mergePartProps } from '@fringeworks/react-parts-props';
 
 function Button({ icon, children, partsProps }: ButtonProps) {
   return (
@@ -84,8 +84,8 @@ function Button({ icon, children, partsProps }: ButtonProps) {
 
 ### 型
 
-| 型                  | 説明                                                         |
-| ------------------- | ------------------------------------------------------------ |
+| 型                  | 説明                                                           |
+| ------------------- | -------------------------------------------------------------- |
 | `PartsDefinition`   | パーツの定義。キーにパーツ名、値にそのプロパティの型を指定する |
-| `PartsProps<T>`     | `partsProps` の型                                            |
-| `WithPartsProps<T>` | `partsProps` を持ったプロパティ                              |
+| `PartsProps<T>`     | `partsProps` の型                                              |
+| `WithPartsProps<T>` | `partsProps` を持ったプロパティ                                |

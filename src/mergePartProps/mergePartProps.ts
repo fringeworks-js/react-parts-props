@@ -1,4 +1,4 @@
-import mergeProps from '@niche-works/react-merge/mergeProps';
+import mergeProps from '@fringeworks/react-merge/mergeProps';
 import type { PartsProps } from '../types';
 import type { PartPropsValue } from './types';
 
