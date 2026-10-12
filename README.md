@@ -1,6 +1,6 @@
 # @fringeworks/react-parts-props
 
-`@fringeworks/react-parts-props` is a niche library for passing props to each of the components that make up a composite React component.
+`@fringeworks/react-parts-props` is a library some will find handy, for passing props to each of the components that make up a composite React component.
 
 **[日本語のREADMEはこちら](./README.ja.md)**
 

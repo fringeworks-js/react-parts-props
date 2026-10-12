@@ -1,6 +1,6 @@
 # @fringeworks/react-parts-props
 
-`@fringeworks/react-parts-props` は React の複合コンポーネントを構成する各コンポーネントにプロパティを渡すためのニッチなライブラリです。
+`@fringeworks/react-parts-props` は React の複合コンポーネントを構成する各コンポーネントにプロパティを渡すための、誰かにとっては便利なライブラリです。
 
 **[English README is available here](./README.md)**
 
