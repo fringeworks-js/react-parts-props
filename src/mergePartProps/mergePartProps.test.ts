@@ -56,7 +56,7 @@ describe('mergePartProps', () => {
       expect(result).toEqual({ className: 'a' });
     });
 
-    it('パーツの型を指定しなくても base から推論される', () => {
+    it('パーツの型を指定しなくても overrides から推論される', () => {
       const override: Partial<NwrIconProps> | undefined = { value: 'search' };
       const result = mergePartProps({ className: 'a' }, override);
       expect(result).toEqual({ className: 'a', value: 'search' });
@@ -141,6 +141,16 @@ describe('mergePartProps', () => {
       expect(ref1.current).toBe(element);
       expect(ref2.current).toBe(element);
     });
+
+    it('イベントハンドラーに null を指定しても前のハンドラーを維持する', () => {
+      const onClick = vi.fn();
+      const result = mergePartProps<{ onClick?: (() => void) | null }>(
+        { onClick },
+        { onClick: null },
+      );
+      result.onClick?.();
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
   });
 
   // ----------------------------------------------------------------
@@ -161,6 +171,25 @@ describe('mergePartProps', () => {
         value: 'home',
         partsProps: { img: { alt: 'ホーム' } },
       });
+    });
+
+    it('base にだけ partsProps があるときはそれを返す', () => {
+      const result = mergePartProps<NwrIconProps>(
+        { partsProps: { img: { alt: 'ホーム' } } },
+        { value: 'home' },
+      );
+      expect(result).toEqual({
+        value: 'home',
+        partsProps: { img: { alt: 'ホーム' } },
+      });
+    });
+
+    it('値が全て falsy のパーツは結果に含めない', () => {
+      const result = mergePartProps<NwrIconProps>(
+        { partsProps: { root: { className: 'a' }, img: undefined } },
+        { partsProps: { img: undefined } },
+      );
+      expect(result.partsProps).toEqual({ root: { className: 'a' } });
     });
 
     it('partsProps はパーツ毎にマージされる', () => {

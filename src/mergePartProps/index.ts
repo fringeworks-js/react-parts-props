@@ -1,2 +1,2 @@
-export { default } from './mergePartProps';
+export { default, default as mergePartProps } from './mergePartProps';
 export type * from './types';

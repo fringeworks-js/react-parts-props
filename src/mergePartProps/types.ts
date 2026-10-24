@@ -3,7 +3,4 @@
  * falsyな値は無視される
  */
 export type PartPropsValue<P extends object> =
-  | Partial<P>
-  | null
-  | undefined
-  | false;
+  Partial<P> | null | undefined | false;

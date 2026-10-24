@@ -6,13 +6,14 @@ import type { PartPropsValue } from './types';
  * パーツに渡すプロパティをマージする
  * 後に指定したものが優先され、className・style・イベントハンドラー・refは合成される
  * partsPropsはパーツ毎に再帰的にマージされる
- * @param base コンポーネントがパーツに設定するプロパティ
+ * プロパティの型は overrides から推論する（base は推論に使わない）
+ * @param base コンポーネントがパーツに設定するプロパティ。`data-*` も指定できる
  * @param overrides 上書きするプロパティ（主に利用者から渡されたpartsPropsの値）
- * @returns
+ * @returns マージしたプロパティ
  */
 export default function mergePartProps<P extends object>(
-  base: P,
-  ...overrides: PartPropsValue<NoInfer<P>>[]
+  base: NoInfer<Partial<P>> & { [key: `data-${string}`]: unknown },
+  ...overrides: PartPropsValue<P>[]
 ): P {
   return _mergePartProps([base, ...overrides]) as P;
 }
@@ -41,8 +42,9 @@ function _mergePartProps(
 
 /**
  * partsPropsをパーツ毎にマージする
- * @param partsPropsList
- * @returns
+ * 値が全て falsy のパーツは結果に含めない
+ * @param partsPropsList マージするpartsPropsの一覧
+ * @returns パーツ毎にマージしたpartsProps
  */
 function _mergePartsProps(partsPropsList: PartsProps[]): PartsProps {
   const parts = new Set(
@@ -50,9 +52,10 @@ function _mergePartsProps(partsPropsList: PartsProps[]): PartsProps {
   );
   const result: PartsProps = {};
   for (const part of parts) {
-    result[part] = _mergePartProps(
-      partsPropsList.map((partsProps) => partsProps[part]),
-    );
+    const propsList = partsPropsList.map((partsProps) => partsProps[part]);
+    if (propsList.some(Boolean)) {
+      result[part] = _mergePartProps(propsList);
+    }
   }
   return result;
 }
